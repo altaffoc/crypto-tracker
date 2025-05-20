@@ -1,5 +1,5 @@
-from flask import Flask, render_template, send_from_directory
-import os
+import requests
+from flask import Flask, render_template, jsonify, send_from_directory
 
 app = Flask(__name__)
 
@@ -7,11 +7,24 @@ app = Flask(__name__)
 def home():
     return render_template('index.html')
 
-# Route untuk verifikasi AdsRock
 @app.route('/adsrock.txt')
 def serve_adsrock():
     return send_from_directory('static', 'adsrock.txt')
 
-if __name__ == '__main__':
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host='0.0.0.0', port=port)
+@app.route('/api/prices')
+def get_prices():
+    url = 'https://api.coingecko.com/api/v3/simple/price'
+    params = {
+        'ids': 'bitcoin,ethereum,solana',
+        'vs_currencies': 'usd'
+    }
+    try:
+        response = requests.get(url, params=params)
+        data = response.json()
+        return jsonify({
+            'bitcoin': data['bitcoin']['usd'],
+            'ethereum': data['ethereum']['usd'],
+            'solana': data['solana']['usd']
+        })
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
