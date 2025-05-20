@@ -1,0 +1,6 @@
+.crypto-card {
+  transition: transform 0.3s ease;
+}
+.crypto-card:hover {
+  transform: scale(1.02);
+}
