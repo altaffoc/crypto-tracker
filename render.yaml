@@ -1,7 +1,0 @@
-services:
-  - type: web
-    name: crypto-tracker
-    env: python
-    plan: free
-    buildCommand: ""
-    startCommand: python main.py
